@@ -13,9 +13,9 @@ class HashTable:
     that accepts string keys
     '''
     def __init__(self, capacity=15):
-        self.capacity = capacity  # Number of buckets in the hash table
+		self.capacity = capacity  # Number of buckets in the hash table
 		self.size =  0
-        self.storage = [None] * capacity
+		self.storage = [None] * capacity
 
 
     def _hash(self, key):
@@ -57,7 +57,7 @@ class HashTable:
         Fill this in.
         '''
 		self.size +=1
-		index= self.hash(key)
+		index= self._hash_mod(key)
 		node= self.storage[index]
 		if node is None:
 			self.storage[index] = LinkedPair(key,value)
@@ -78,7 +78,7 @@ class HashTable:
 
         Fill this in.
         '''
-		index = self.hash(key)
+		index = self._hash_mod(key)
 		node=self.storage[index]
 		prev=None
 
@@ -97,9 +97,6 @@ class HashTable:
 				prev.next = prev.next.next
 			return result
 
-			
-        
-
 
     def retrieve(self, key):
         '''
@@ -109,7 +106,7 @@ class HashTable:
 
         Fill this in.
         '''
-		index = self.hash(key)
+		index = self._hash_mod(key)
 		node= self.storage[index]
 		while node is not None and node.key != key:
 			node=node.next
@@ -126,7 +123,8 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        for x in range(self.capacity):
+			self.storage.append(None)
 
 
 
