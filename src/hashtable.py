@@ -12,8 +12,9 @@ class HashTable:
     A hash table that with `capacity` buckets
     that accepts string keys
     '''
-    def __init__(self, capacity):
+    def __init__(self, capacity=15):
         self.capacity = capacity  # Number of buckets in the hash table
+		self.size =  0
         self.storage = [None] * capacity
 
 
@@ -23,7 +24,11 @@ class HashTable:
 
         You may replace the Python hash with DJB2 as a stretch goal.
         '''
-        return hash(key)
+		hashsum=0
+		for i,char in enumerate(key):
+			hashsum += (i+len(key))**ord(char)
+			
+        return hashsum
 
 
     def _hash_djb2(self, key):
@@ -51,8 +56,18 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
-
+		self.size +=1
+		index= self.hash(key)
+		node= self.storage[index]
+		if node is None:
+			self.storage[index] = LinkedPair(key,value)
+			return
+		else:
+			prev=node
+		while node is not None:
+			prev=node
+			node = node.next
+		prev.next = LinkedPair(key, value)
 
 
     def remove(self, key):
@@ -63,7 +78,7 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        
 
 
     def retrieve(self, key):
@@ -74,7 +89,14 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+		index = self.hash(key)
+		node= self.storage[index]
+		while node is not None and node.key != key:
+			node=node.next
+		if node is None:
+			return None
+		else:
+			return node.value
 
 
     def resize(self):
