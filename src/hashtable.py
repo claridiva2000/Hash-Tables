@@ -12,9 +12,10 @@ class HashTable:
     A hash table that with `capacity` buckets
     that accepts string keys
     '''
-    def __init__(self, capacity):
-        self.capacity = capacity  # Number of buckets in the hash table
-        self.storage = [None] * capacity
+    def __init__(self, capacity=15):
+		self.capacity = capacity  # Number of buckets in the hash table
+		self.size =  0
+		self.storage = [None] * capacity
 
 
     def _hash(self, key):
@@ -23,7 +24,11 @@ class HashTable:
 
         You may replace the Python hash with DJB2 as a stretch goal.
         '''
-        return hash(key)
+		hashsum=0
+		for i,char in enumerate(key):
+			hashsum += (i+len(key))**ord(char)
+			
+        return hashsum
 
 
     def _hash_djb2(self, key):
@@ -51,8 +56,18 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
-
+		self.size +=1
+		index= self._hash_mod(key)
+		node= self.storage[index]
+		if node is None:
+			self.storage[index] = LinkedPair(key,value)
+			return
+		else:
+			prev=node
+		while node is not None:
+			prev=node
+			node = node.next
+		prev.next = LinkedPair(key, value)
 
 
     def remove(self, key):
@@ -63,7 +78,24 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+		index = self._hash_mod(key)
+		node=self.storage[index]
+		prev=None
+
+		While node is not None and node.key != key:
+			prev=node
+			node=node.next
+		if node is None:
+			return None
+		else:
+			self.size -=1
+			result = node.value
+
+			if prev is None:
+				node=None
+			else:
+				prev.next = prev.next.next
+			return result
 
 
     def retrieve(self, key):
@@ -74,7 +106,14 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+		index = self._hash_mod(key)
+		node= self.storage[index]
+		while node is not None and node.key != key:
+			node=node.next
+		if node is None:
+			return None
+		else:
+			return node.value
 
 
     def resize(self):
@@ -84,7 +123,8 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        for x in range(self.capacity):
+			self.storage.append(None)
 
 
 
