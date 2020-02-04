@@ -78,6 +78,26 @@ class HashTable:
 
         Fill this in.
         '''
+		index = self.hash(key)
+		node=self.storage[index]
+		prev=None
+
+		While node is not None and node.key != key:
+			prev=node
+			node=node.next
+		if node is None:
+			return None
+		else:
+			self.size -=1
+			result = node.value
+
+			if prev is None:
+				node=None
+			else:
+				prev.next = prev.next.next
+			return result
+
+			
         
 
 
